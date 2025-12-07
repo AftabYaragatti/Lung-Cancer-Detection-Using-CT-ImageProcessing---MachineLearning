@@ -1,0 +1,1937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedDash - Medical Platform</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            min-height: 100vh;
+        }
+
+        /* animated, colorful background (index-like) */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 25%, #ec4899 50%, #06b6d4 75%, #1e3a8a 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 14s ease infinite;
+            z-index: -2;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* subtle overlay for depth */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(59,130,246,0.06) 0%, transparent 40%),
+                        radial-gradient(circle at 80% 80%, rgba(236,72,153,0.04) 0%, transparent 40%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Login Page Styles */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 36px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.18);
+            width: 100%;
+            max-width: 460px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .login-card:hover { transform: translateY(-6px); box-shadow: 0 35px 70px rgba(0,0,0,0.22); }
+
+        .login-header {
+            margin-bottom: 30px;
+        }
+
+        .login-header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+
+        .login-form {
+            margin-bottom: 20px;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            transition: border-color 0.3s ease;
+        }
+
+        .login-input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.22s ease, box-shadow 0.22s ease;
+            margin-bottom: 14px;
+            box-shadow: 0 10px 25px rgba(59,130,246,0.18);
+        }
+
+        .login-btn:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(59,130,246,0.28); }
+
+        .login-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .login-links {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .login-link {
+            color: #3498db;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .login-link:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+
+        .register-prompt {
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+            color: #6c757d;
+        }
+
+        .register-btn {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            margin-top: 10px;
+        }
+
+        .register-btn:hover {
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+        }
+
+        .forgot-password-form, .create-account-form {
+            display: none;
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+            margin-bottom: 15px;
+        }
+
+        .profile-photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #3498db;
+            margin: 0 auto 10px;
+            display: block;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(135deg, rgba(15,23,42,0.96) 0%, rgba(59,130,246,0.12) 100%);
+            backdrop-filter: blur(14px);
+            color: white;
+            padding: 24px 16px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            border-right: 1px solid rgba(59,130,246,0.18);
+            box-shadow: 6px 0 30px rgba(0,0,0,0.18);
+        }
+
+        .sidebar-header {
+            text-align: center;
+            padding: 0 20px 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .user-info {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-size: 1.5rem;
+        }
+
+        .nav-menu {
+            padding: 20px 0;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 15px 25px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .nav-item:hover {
+            background: rgba(255,255,255,0.1);
+            padding-left: 35px;
+        }
+
+        .nav-item.active {
+            background: rgba(255,255,255,0.2);
+            border-right: 4px solid white;
+        }
+
+        .nav-item.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .nav-item.disabled:hover {
+            background: none;
+            padding-left: 25px;
+        }
+
+        .nav-item i {
+            margin-right: 10px;
+            width: 20px;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        .content-section {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-header {
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f1f2f6;
+        }
+
+        .section-header h2 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .section-header p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+            color: white;
+            padding: 26px;
+            border-radius: 14px;
+            text-align: center;
+            box-shadow: 0 12px 30px rgba(59,130,246,0.14);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .stat-card:hover { transform: translateY(-8px); box-shadow: 0 22px 50px rgba(59,130,246,0.2); }
+
+        .stat-card.success {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+        }
+
+        .stat-card.warning {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        }
+
+        .stat-card.danger {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .stat-card h3 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .input-group input, .input-group select, .input-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .input-group input[readonly] {
+            background: #f8f9fa;
+            color: #6c757d;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #3498db;
+        }
+
+        .info-card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .info-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-card li {
+            padding: 5px 0;
+            color: #495057;
+        }
+
+        .info-card li:before {
+            content: "✓";
+            color: #27ae60;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .analysis-result {
+            background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid #28a745;
+            margin-top: 20px;
+            box-shadow: 0 12px 30px rgba(16,185,129,0.08);
+            transition: transform 0.22s ease;
+        }
+
+        .analysis-result:hover { transform: translateY(-6px); }
+
+        .analysis-result h4 {
+            color: #155724;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .patient-images {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .patient-images img {
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 3px solid #3498db;
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
+        }
+
+        /* Responsive thumbnails */
+        @media (max-width: 480px) {
+            .patient-images img {
+                width: 80px;
+                height: 80px;
+            }
+        }
+
+        .medical-record {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3498db;
+        }
+
+        .medical-record h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .medical-record p {
+            margin-bottom: 5px;
+            color: #495057;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 60px 15px 15px;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .patient-images {
+                justify-content: center;
+            }
+
+            .login-card {
+                margin: 10px;
+                padding: 20px;
+                max-width: 90%;
+            }
+
+            /* make sidebar accessible on mobile with visible toggle */
+            .mobile-menu-btn { display:block; position: fixed; left: 12px; top: 12px; z-index: 1100; }
+
+            .login-header h1 {
+                font-size: 2rem;
+            }
+
+            .info-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-menu-btn {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <script>
+    // Log login/logout attempts for audit logs (shared with admin dashboard)
+    function logLoginAttempt(email, role, isLogin) {
+        // Only store successful logins (ignore failed attempts or logouts)
+        if (!isLogin) return;
+
+        // Store user login logs in 'userLoginLogs' for admin dashboard visibility
+        const key = role === 'admin' ? 'adminLoginLogs' : 'userLoginLogs';
+        const logs = JSON.parse(localStorage.getItem(key) || '[]');
+        // Keep newest first
+        logs.unshift({
+            email: email,
+            userType: role,
+            success: true,
+            timestamp: new Date().toISOString(),
+            date: new Date().toLocaleDateString(),
+            time: new Date().toLocaleTimeString()
+        });
+        // Limit stored logs to 200 entries
+        if (logs.length > 200) logs.length = 200;
+        localStorage.setItem(key, JSON.stringify(logs));
+    }
+    </script>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h1>🏥 MedDash</h1>
+                <p>Medical Platform Login</p>
+            </div>
+            
+            <!-- Login Form -->
+            <form id="loginForm" class="login-form">
+                <input type="email" id="loginEmail" class="login-input" placeholder="Email Address" required>
+                <input type="password" id="loginPassword" class="login-input" placeholder="Password" required>
+                <button type="submit" class="login-btn" id="loginBtn">🔐 Login</button>
+                
+                <div class="login-links">
+                    <a href="#" class="login-link" onclick="showForgotPassword()">Forgot Password?</a>
+                    <a href="#" class="login-link" onclick="showRegisterForm()">New User?</a>
+                </div>
+            </form>
+            
+            <!-- Forgot Password Form -->
+            <form id="forgotPasswordForm" class="forgot-password-form">
+                <input type="email" id="forgotEmail" class="login-input" placeholder="Enter your email" required>
+                <button type="submit" class="login-btn">📧 Send Reset Link</button>
+                <button type="button" class="login-btn back-btn" onclick="showLoginForm()">← Back to Login</button>
+            </form>
+            
+            <!-- Create Account Form -->
+            <form id="createAccountForm" class="create-account-form" style="display: none;">
+                <h3 style="color: #2c3e50; margin-bottom: 20px; text-align: center;">Create New Account</h3>
+                <input type="text" id="createFullName" class="login-input" placeholder="Full Name" required>
+                <input type="email" id="createEmail" class="login-input" placeholder="Email Address" required>
+                <input type="password" id="createPassword" class="login-input" placeholder="Password (min 6 characters)" required minlength="6">
+                <input type="password" id="confirmPassword" class="login-input" placeholder="Confirm Password" required>
+                <button type="submit" class="login-btn">🎉 Create Account</button>
+                <button type="button" class="login-btn back-btn" onclick="showLoginForm()">← Back to Login</button>
+            </form>
+            
+            <!-- Register Prompt -->
+            <div class="register-prompt">
+                <p>Don't have an account?</p>
+                <button type="button" class="login-btn register-btn" onclick="showCreateAccountForm()">📝 Create Account</button>
+            </div>
+            
+            <div id="loginMessage"></div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" onclick="toggleSidebar()" style="display: none;">☰</button>
+
+    <!-- Dashboard -->
+    <div class="dashboard-container" id="dashboardContainer" style="display: none;">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>🏥User Dash Board</h2>
+                <p>Medical Analysis System</p>
+            </div>
+            
+            <div class="user-info">
+                <div class="user-avatar">👤</div>
+                <div id="currentUser">Welcome User</div>
+                <div style="font-size: 0.8rem; opacity: 0.8;">Dashboard</div>
+            </div>
+            
+            <nav class="nav-menu">
+                <button class="nav-item" onclick="showSection('home', event)">
+                    🏠 Home
+                </button>
+                <button class="nav-item active" onclick="showSection('registration', event)">
+                    📋 Registration
+                </button>
+                <button class="nav-item disabled" id="profileNav" onclick="showSection('profile', event)">
+                    👤 Profile
+                </button>
+                <button class="nav-item" onclick="showSection('lungCancer', event)">
+                    🫁 Lung Cancer Info
+                </button>
+                <button class="nav-item" onclick="logout()">
+                    🚪 Logout
+                </button>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Home Section -->
+            <div id="home" class="content-section">
+                <div class="section-header">
+                    <h2>Welcome to User Dashboard</h2>
+                    <p>Complete User Registration and Profile Management System</p>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3 id="totalUsers">0</h3>
+                        <p>Total Users</p>
+                    </div>
+                    <div class="stat-card success">
+                        <h3 id="activeUsers">0</h3>
+                        <p>Active Users</p>
+                    </div>
+                    <div class="stat-card warning">
+                        <h3 id="pendingUsers">0</h3>
+                        <p>Pending Verification</p>
+                    </div>
+                    <!-- 'New Registrations' stat removed from home dashboard -->
+                </div>
+
+                <div class="info-cards">
+                    <div class="info-card">
+                        <h3>👤 User Management</h3>
+                        <p>Complete user registration and profile management system with secure data handling.</p>
+                        <ul>
+                            <li>Secure Registration Process</li>
+                            <li>Profile Management</li>
+                            <li>Data Protection</li>
+                            <li>Easy Access Control</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h3>📊 Data Security</h3>
+                        <p>Advanced security measures to protect user information and maintain privacy standards.</p>
+                        <ul>
+                            <li>Encrypted Data Storage</li>
+                            <li>Secure Authentication</li>
+                            <li>Privacy Protection</li>
+                            <li>Access Logging</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h3>🔧 Platform Features</h3>
+                        <p>Modern platform with user-friendly interface and comprehensive functionality.</p>
+                        <ul>
+                            <li>Responsive Design</li>
+                            <li>Easy Navigation</li>
+                            <li>Profile Customization</li>
+                            <li>Data Export Options</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div style="background: #e3f2fd; border-radius: 15px; padding: 25px; text-align: center;">
+                    <h3 style="color: #1976d2; margin-bottom: 15px;">🚀 Get Started</h3>
+                    <p style="color: #1565c0; margin-bottom: 20px;">Complete your registration to unlock your full profile and access all platform features.</p>
+                    <button class="btn btn-primary" onclick="showSection('registration')">Start Registration</button>
+                </div>
+            </div>
+
+            <!-- Registration Section -->
+            <div id="registration" class="content-section active">
+                <div class="section-header">
+                    <h2>User Registration</h2>
+                    <p>Complete your registration to access the platform</p>
+                </div>
+                
+                <form id="registrationForm">
+                    <div class="form-grid">
+                        <div>
+                            <div class="input-group">
+                                <label for="regUniqueId">User ID</label>
+                                <input type="text" id="regUniqueId" readonly>
+                            </div>
+                            <div class="input-group">
+                                <label for="regDate">Registration Date</label>
+                                <input type="date" id="regDate" readonly>
+                            </div>
+                            <div class="input-group">
+                                <label for="regTime">Registration Time</label>
+                                <input type="time" id="regTime" readonly>
+                            </div>
+                            <div class="input-group">
+                                <label for="regFullName">Full Name *</label>
+                                <input type="text" id="regFullName" required placeholder="Enter your full name">
+                            </div>
+                            <div class="input-group">
+                                <label for="regAge">Age *</label>
+                                <input type="number" id="regAge" required min="1" max="120" placeholder="Enter your age">
+                            </div>
+                            <div class="input-group">
+                                <label for="regGender">Gender *</label>
+                                <select id="regGender" required>
+                                    <option value="">Select Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="input-group">
+                                <label for="regCity">City/Place *</label>
+                                <input type="text" id="regCity" required placeholder="Enter your city">
+                            </div>
+                            <div class="input-group">
+                                <label for="regContact">Contact Number *</label>
+                                <input type="tel" id="regContact" required pattern="[0-9]{10}" placeholder="Enter 10-digit contact number">
+                            </div>
+                            <div class="input-group">
+                                <label for="regEmail">Email Address *</label>
+                                <input type="email" id="regEmail" required placeholder="Enter your email address">
+                            </div>
+                            <div class="input-group">
+                                <label for="regEmergencyContact">Emergency Contact</label>
+                                <input type="tel" id="regEmergencyContact" placeholder="Emergency contact number">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label for="regUserPhoto">Profile Photo (Optional)</label>
+                            <input type="file" id="regUserPhoto" accept="image/*">
+                            <small style="color: #6c757d;">Upload a photo (optional - if left empty, a default avatar will be used)</small>
+                        </div>
+                        <div class="input-group">
+                            <label for="regAddress">Address</label>
+                            <textarea id="regAddress" rows="4" placeholder="Enter your complete address"></textarea>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" id="registerBtn">
+                        📝 Complete Registration
+                    </button>
+                </form>
+                
+                <div id="registrationMessage"></div>
+                <div id="registrationResults"></div>
+            </div>
+
+            <!-- Profile Section -->
+            <div id="profile" class="content-section">
+                <div class="section-header">
+                    <h2>Your Profile</h2>
+                    <p>View and manage your profile information</p>
+                </div>
+                
+                <!-- Profile Display (Social Media Style) -->
+                <div id="profileDisplay" style="display: none;">
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 20px; padding: 40px; text-align: center; color: white; margin-bottom: 30px;">
+                        <div id="profilePhotoDisplay" style="width: 120px; height: 120px; border-radius: 50%; margin: 0 auto 20px; border: 4px solid white; overflow: hidden; background: rgba(255,255,255,0.2);">
+                            <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 3rem;">👤</div>
+                        </div>
+                        <h2 id="profileDisplayName" style="margin-bottom: 10px; font-size: 2rem;">User Name</h2>
+                        <p id="profileDisplayId" style="opacity: 0.9; font-size: 1.1rem;">User ID</p>
+                        <div style="display: flex; justify-content: center; gap: 20px; margin-top: 20px; flex-wrap: wrap;">
+                            <div style="background: rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 25px;">
+                                <span id="profileDisplayAge">Age</span>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 25px;">
+                                <span id="profileDisplayGender">Gender</span>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 25px;">
+                                <span id="profileDisplayCity">City</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                        <div style="background: white; border-radius: 15px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                            <h3 style="color: #2c3e50; margin-bottom: 20px; display: flex; align-items: center;">
+                                📧 Contact Information
+                            </h3>
+                            <div style="display: flex; flex-direction: column; gap: 10px;">
+                                <p style="margin-bottom: 10px;"><strong>Email:</strong> <span id="profileDisplayEmail">email@example.com</span></p>
+                                <p style="margin-bottom: 10px;"><strong>Phone:</strong> <span id="profileDisplayPhone">+1234567890</span></p>
+                                <p style="margin-bottom: 10px;"><strong>Emergency Contact:</strong> <span id="profileDisplayEmergency">Not provided</span></p>
+                            </div>
+                        </div>
+                        
+                        <div style="background: white; border-radius: 15px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                            <h3 style="color: #2c3e50; margin-bottom: 20px; display: flex; align-items: center;">
+                                📍 Address Information
+                            </h3>
+                            <p id="profileDisplayAddress" style="color: #495057; line-height: 1.6;">Address not provided</p>
+                        </div>
+                        
+                        <div style="background: white; border-radius: 15px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                            <h3 style="color: #2c3e50; margin-bottom: 20px; display: flex; align-items: center;">
+                                📅 Registration Details
+                            </h3>
+                            <p style="margin-bottom: 10px;"><strong>Registration Date:</strong> <span id="profileDisplayDate">Date</span></p>
+                            <p style="margin-bottom: 10px;"><strong>Status:</strong> <span style="color: #27ae60; font-weight: bold;">✅ Active</span></p>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center;">
+                        <button class="btn btn-primary" onclick="showEditProfile()" style="padding: 15px 30px; font-size: 1.1rem;">
+                            ✏️ Edit Profile
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Profile Edit Form (Hidden by default) -->
+                <div id="profileEditForm" style="display: none;">
+                    <div style="background: white; border-radius: 15px; padding: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                        <h3 style="color: #2c3e50; margin-bottom: 20px; text-align: center;">Edit Profile Information</h3>
+                        <form id="profileUpdateForm">
+                            <div class="form-grid">
+                                <div>
+                                    <div class="input-group">
+                                        <label for="editFullName">Full Name</label>
+                                        <input type="text" id="editFullName" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="editAge">Age</label>
+                                        <input type="number" id="editAge" min="1" max="120" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="editGender">Gender</label>
+                                        <select id="editGender" required>
+                                            <option value="">Select Gender</option>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="editCity">City</label>
+                                        <input type="text" id="editCity" required>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="input-group">
+                                        <label for="editContact">Contact Number</label>
+                                        <input type="tel" id="editContact" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="editEmergencyContact">Emergency Contact</label>
+                                        <input type="tel" id="editEmergencyContact">
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="editAddress">Address</label>
+                                        <textarea id="editAddress" rows="4"></textarea>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="editProfilePhoto">Update Profile Photo</label>
+                                        <input type="file" id="editProfilePhoto" accept="image/*">
+                                        <small style="color: #6c757d;">Leave empty to keep current photo</small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="text-align: center; margin-top: 30px;">
+                                <button type="submit" class="btn btn-success" style="margin-right: 15px; padding: 12px 25px;">
+                                    💾 Update Profile
+                                </button>
+                                <button type="button" class="btn" onclick="cancelEditProfile()" style="background: #6c757d; color: white; padding: 12px 25px;">
+                                    ❌ Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Not Registered Message -->
+                <div id="profileNotRegistered">
+                    <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 15px; padding: 30px; text-align: center;">
+                        <h3 style="color: #856404; margin-bottom: 15px;">📋 Complete Registration Required</h3>
+                        <p style="color: #856404; margin-bottom: 20px;">You need to complete your registration first to view and manage your profile.</p>
+                        <button class="btn btn-primary" onclick="showSection('registration')">Complete Registration</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lung Cancer Info Section -->
+            <div id="lungCancer" class="content-section">
+                <div class="section-header">
+                    <h2>Lung Cancer Information</h2>
+                    <p>Comprehensive information about lung cancer, symptoms, and treatment options</p>
+                </div>
+                
+                <div class="info-cards">
+                    <div class="info-card">
+                        <h3>🔍 What is Lung Cancer?</h3>
+                        <p>Lung cancer is a type of cancer that begins in the lungs. It occurs when cells in the lung begin to grow uncontrollably, forming tumors that can interfere with lung function.</p>
+                        <ul>
+                            <li>Most common cause of cancer death worldwide</li>
+                            <li>Two main types: Non-small cell and Small cell</li>
+                            <li>Often linked to smoking but can affect non-smokers</li>
+                            <li>Early detection improves treatment outcomes</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h3>⚠️ Symptoms to Watch For</h3>
+                        <p>Early lung cancer may not cause symptoms, but as it progresses, various signs may appear:</p>
+                        <ul>
+                            <li>Persistent cough that doesn't go away</li>
+                            <li>Coughing up blood or rust-colored sputum</li>
+                            <li>Chest pain that worsens with breathing</li>
+                            <li>Shortness of breath</li>
+                            <li>Unexplained weight loss</li>
+                            <li>Fatigue and weakness</li>
+                            <li>Recurring respiratory infections</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h3>🎯 Risk Factors</h3>
+                        <p>Several factors can increase the risk of developing lung cancer:</p>
+                        <ul>
+                            <li>Smoking (leading cause)</li>
+                            <li>Secondhand smoke exposure</li>
+                            <li>Radon gas exposure</li>
+                            <li>Asbestos exposure</li>
+                            <li>Family history of lung cancer</li>
+                            <li>Air pollution</li>
+                            <li>Previous radiation therapy</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h3>📋 Stages of Lung Cancer</h3>
+                        <p>Lung cancer is staged to determine the extent of the disease:</p>
+                        <ul>
+                            <li><strong>Stage I:</strong> Cancer is localized to the lung</li>
+                            <li><strong>Stage II:</strong> Cancer has spread to nearby lymph nodes</li>
+                            <li><strong>Stage III:</strong> Cancer has spread to lymph nodes in the chest</li>
+                            <li><strong>Stage IV:</strong> Cancer has spread to other parts of the body</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h3>🏥 Treatment Options</h3>
+                        <p>Treatment depends on the type, stage, and overall health:</p>
+                        <ul>
+                            <li><strong>Surgery:</strong> Removal of tumor and surrounding tissue</li>
+                            <li><strong>Chemotherapy:</strong> Drugs to destroy cancer cells</li>
+                            <li><strong>Radiation Therapy:</strong> High-energy rays to kill cancer cells</li>
+                            <li><strong>Targeted Therapy:</strong> Drugs that target specific cancer features</li>
+                            <li><strong>Immunotherapy:</strong> Helps immune system fight cancer</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h3>🛡️ Prevention Tips</h3>
+                        <p>While not all lung cancers can be prevented, you can reduce your risk:</p>
+                        <ul>
+                            <li>Don't smoke or quit if you do</li>
+                            <li>Avoid secondhand smoke</li>
+                            <li>Test your home for radon</li>
+                            <li>Eat a healthy diet rich in fruits and vegetables</li>
+                            <li>Exercise regularly</li>
+                            <li>Limit alcohol consumption</li>
+                            <li>Get regular check-ups</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 10px; padding: 20px; margin-top: 30px;">
+                    <h3 style="color: #856404; margin-bottom: 15px;">⚠️ Important Notice</h3>
+                    <p style="color: #856404; margin: 0;">This information is for educational purposes only and should not replace professional medical advice. If you have concerns about lung cancer or experience any symptoms, please consult with a qualified healthcare provider immediately.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let userRegistered = false;
+        let currentUserName = '';
+        let currentUserData = null;
+        let isLoggedIn = false;
+
+        // Initialize system
+        function initializeSystem() {
+            checkLoginStatus();
+            if (isLoggedIn) {
+                showDashboard();
+                generateUniqueId();
+                updateStats();
+                checkUserRegistration();
+                updateUserDisplay();
+                showSection('home'); // Always show home first after login
+            } else {
+                showLoginPage();
+            }
+        }
+
+        // Check login status - persistent across browser sessions
+        function checkLoginStatus() {
+            const sessionData = localStorage.getItem('userSession');
+            if (sessionData) {
+                const session = JSON.parse(sessionData);
+                // Check if session is still valid (you can add expiry logic here)
+                if (session.email) {
+                    // Get user data from accounts
+                    const accounts = JSON.parse(localStorage.getItem('userAccounts') || '[]');
+                    const user = accounts.find(u => u.email === session.email);
+                    
+                    if (user) {
+                        currentUserData = user;
+                        currentUserName = user.fullName || user.email;
+                        isLoggedIn = true;
+                        
+                        // Check if user has completed registration
+                        const registrations = JSON.parse(localStorage.getItem('userRegistrations') || '[]');
+                        const registration = registrations.find(r => r.email === user.email);
+                        userRegistered = !!registration;
+                    }
+                }
+            }
+        }
+
+        // Show login page
+        function showLoginPage() {
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('dashboardContainer').style.display = 'none';
+            document.querySelector('.mobile-menu-btn').style.display = 'none';
+        }
+
+        // Show dashboard
+        function showDashboard() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('dashboardContainer').style.display = 'flex';
+            document.querySelector('.mobile-menu-btn').style.display = 'block';
+        }
+
+        // Login form functions
+        function showForgotPassword() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('forgotPasswordForm').style.display = 'block';
+        }
+
+        function showLoginForm() {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('forgotPasswordForm').style.display = 'none';
+            document.getElementById('createAccountForm').style.display = 'none';
+        }
+
+        function showCreateAccountForm() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('forgotPasswordForm').style.display = 'none';
+            document.getElementById('createAccountForm').style.display = 'block';
+        }
+
+        function showRegisterForm() {
+            showCreateAccountForm();
+        }
+
+        // Login form handling
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const messageDiv = document.getElementById('loginMessage');
+            
+            // Get user accounts (separate from registrations)
+            const accounts = JSON.parse(localStorage.getItem('userAccounts') || '[]');
+            
+            // Check credentials
+            const user = accounts.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                // Log user login for admin logs
+                if (typeof logLoginAttempt === 'function') {
+                    logLoginAttempt(user.email, 'user', true);
+                }
+                // Create persistent session
+                localStorage.setItem('userSession', JSON.stringify({
+                    email: user.email,
+                    loginTime: new Date().toISOString()
+                }));
+                currentUserData = user;
+                currentUserName = user.fullName || user.email;
+                isLoggedIn = true;
+                // Check if user has completed registration
+                const registrations = JSON.parse(localStorage.getItem('userRegistrations') || '[]');
+                const registration = registrations.find(r => r.email === user.email);
+                userRegistered = !!registration;
+                messageDiv.innerHTML = '<div style="color: #27ae60; margin-top: 15px;">✅ Login successful! Redirecting...</div>';
+                setTimeout(() => {
+                    showDashboard();
+                    updateUserDisplay();
+                    updateStats();
+                    if (userRegistered) {
+                        enableProfileSection();
+                    }
+                    showSection('home'); // Always show home first
+                }, 1500);
+            } else {
+                messageDiv.innerHTML = '<div style="color: #e74c3c; margin-top: 15px;">❌ Invalid email or password!</div>';
+            }
+        });
+
+        // Forgot password form handling
+        document.getElementById('forgotPasswordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('forgotEmail').value;
+            const accounts = JSON.parse(localStorage.getItem('userAccounts') || '[]');
+            const user = accounts.find(u => u.email === email);
+            
+            if (user) {
+                // Simulate sending reset link
+                const resetToken = Math.random().toString(36).substr(2, 10);
+                
+                // Store reset token temporarily
+                localStorage.setItem('passwordResetToken', JSON.stringify({
+                    email: email,
+                    token: resetToken,
+                    expires: Date.now() + (15 * 60 * 1000) // 15 minutes
+                }));
+                
+                alert(`🔗 Password reset link sent to ${email}!\n\n📧 Check your email for reset instructions.\n\n🔑 For demo purposes, click OK to reset your password now.`);
+                
+                // For demo, allow immediate password reset
+                const newPassword = prompt('Enter your new password (minimum 6 characters):');
+                if (newPassword && newPassword.length >= 6) {
+                    // Update password in accounts
+                    const accountIndex = accounts.findIndex(u => u.email === email);
+                    if (accountIndex !== -1) {
+                        accounts[accountIndex].password = newPassword;
+                        localStorage.setItem('userAccounts', JSON.stringify(accounts));
+                        alert('✅ Password updated successfully! You can now login with your new password.');
+                    }
+                } else if (newPassword) {
+                    alert('❌ Password must be at least 6 characters long!');
+                }
+            } else {
+                alert('❌ Email not found in our records!');
+            }
+            
+            showLoginForm();
+        });
+
+        // Create account form handling
+        document.getElementById('createAccountForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const fullName = document.getElementById('createFullName').value;
+            const email = document.getElementById('createEmail').value;
+            const password = document.getElementById('createPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const messageDiv = document.getElementById('loginMessage');
+            
+            // Validate passwords match
+            if (password !== confirmPassword) {
+                messageDiv.innerHTML = '<div style="color: #e74c3c; margin-top: 15px;">❌ Passwords do not match!</div>';
+                return;
+            }
+            
+            // Check if email already exists in accounts
+            const accounts = JSON.parse(localStorage.getItem('userAccounts') || '[]');
+            if (accounts.find(u => u.email === email)) {
+                messageDiv.innerHTML = '<div style="color: #e74c3c; margin-top: 15px;">❌ Email already exists! Please use a different email.</div>';
+                return;
+            }
+            
+            // Create new user account (separate from registration)
+            const newAccount = {
+                fullName: fullName,
+                email: email,
+                password: password,
+                accountCreated: new Date().toISOString()
+            };
+            
+            // Save to userAccounts (login credentials)
+            accounts.push(newAccount);
+            localStorage.setItem('userAccounts', JSON.stringify(accounts));
+            
+            messageDiv.innerHTML = '<div style="color: #27ae60; margin-top: 15px;">✅ Account created successfully! You can now login.</div>';
+            
+            // Clear form
+            document.getElementById('createAccountForm').reset();
+            
+            // Show login form after 2 seconds
+            setTimeout(() => {
+                showLoginForm();
+                document.getElementById('loginEmail').value = email;
+                messageDiv.innerHTML = '<div style="color: #3498db; margin-top: 15px;">💡 Please login with your new account credentials.</div>';
+            }, 2000);
+        });
+
+        // Update user display
+        function updateUserDisplay() {
+            document.getElementById('currentUser').textContent = currentUserName;
+            
+            // Update user avatar with photo if available
+            const userAvatar = document.querySelector('.user-avatar');
+            if (currentUserData && currentUserData.userPhoto) {
+                userAvatar.innerHTML = `<img src="${currentUserData.userPhoto}" class="profile-photo" alt="Profile">`;
+            } else {
+                userAvatar.innerHTML = '👤';
+            }
+        }
+
+        // Set user name (called from login page)
+        function setUserName(name) {
+            currentUserName = name;
+            localStorage.setItem('currentUserName', name);
+            updateUserDisplay();
+        }
+
+        // Generate unique ID and set current date/time
+        function generateUniqueId() {
+            const uniqueId = 'MD' + Date.now().toString().slice(-6) + Math.random().toString(36).substr(2, 4).toUpperCase();
+            const regUniqueIdField = document.getElementById('regUniqueId');
+            if (regUniqueIdField) {
+                regUniqueIdField.value = uniqueId;
+            }
+            
+            // Set current date and time
+            const now = new Date();
+            const currentDate = now.toISOString().split('T')[0]; // YYYY-MM-DD format
+            const currentTime = now.toTimeString().split(' ')[0].slice(0, 5); // HH:MM format
+            
+            const regDateField = document.getElementById('regDate');
+            const regTimeField = document.getElementById('regTime');
+            
+            if (regDateField) {
+                regDateField.value = currentDate;
+            }
+            if (regTimeField) {
+                regTimeField.value = currentTime;
+            }
+        }
+
+        // Format registration date and time into a readable string
+        function formatRegistrationDateTime(dateStr, timeStr) {
+            try {
+                if (!dateStr) return 'Unknown';
+
+                // First try parsing dateStr directly (handles ISO timestamps like 2025-11-20T12:34:56Z)
+                let d = new Date(dateStr);
+                if (isNaN(d)) {
+                    // If direct parse failed, try combining date and time (dateStr expected in YYYY-MM-DD)
+                    const timePart = timeStr ? timeStr : '00:00';
+                    const iso = `${dateStr}T${timePart}:00`;
+                    d = new Date(iso);
+                }
+
+                if (isNaN(d)) {
+                    // Fallback: return raw values joined
+                    return `${dateStr} ${timeStr || ''}`.trim();
+                }
+
+                return d.toLocaleString(undefined, { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+            } catch (e) {
+                return `${dateStr} ${timeStr || ''}`.trim();
+            }
+        }
+
+        // Check if user is registered
+        function checkUserRegistration() {
+            const registrations = JSON.parse(localStorage.getItem('userRegistrations') || '[]');
+            const registration = registrations.find(r => r.email === currentUserData.email);
+            
+            if (registration) {
+                userRegistered = true;
+                enableProfileSection();
+                
+                // Hide registration section if already registered
+                const registrationSection = document.getElementById('registration');
+                if (registrationSection) {
+                    registrationSection.innerHTML = `
+                        <div class="section-header">
+                            <h2>Registration Complete</h2>
+                            <p>You have already completed your registration</p>
+                        </div>
+                        <div style="background: #d4edda; border-radius: 15px; padding: 25px; text-align: center;">
+                            <h3 style="color: #155724; margin-bottom: 15px;">✅ Registration Already Complete</h3>
+                            <p style="color: #155724; margin-bottom: 20px;">You have successfully completed your registration. You can view and update your profile information.</p>
+                            <button class="btn btn-primary" onclick="showSection('profile')">View Profile</button>
+                        </div>
+                    `;
+                }
+            } else if (currentUserData) {
+                // Account exists but registration not complete - pre-fill form
+                document.getElementById('regFullName').value = currentUserData.fullName || '';
+                document.getElementById('regEmail').value = currentUserData.email || '';
+            }
+        }
+
+        // Enable profile section
+        function enableProfileSection() {
+            const profileNav = document.getElementById('profileNav');
+            profileNav.classList.remove('disabled');
+            profileNav.style.opacity = '1';
+            profileNav.style.cursor = 'pointer';
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                // Log user logout for admin logs
+                if (typeof logLoginAttempt === 'function' && currentUserData && currentUserData.email) {
+                    logLoginAttempt(currentUserData.email, 'user', false);
+                }
+                // Clear session data only (keep accounts and registrations)
+                localStorage.removeItem('userSession');
+                // Reset variables
+                currentUserData = null;
+                currentUserName = '';
+                isLoggedIn = false;
+                userRegistered = false;
+                // Reset UI state
+                document.getElementById('profileNav').classList.add('disabled');
+                document.getElementById('profileNav').style.opacity = '0.5';
+                document.getElementById('profileNav').style.cursor = 'not-allowed';
+                // Show login page
+                showLoginPage();
+                // Reset forms
+                document.getElementById('loginForm').reset();
+                document.getElementById('loginMessage').innerHTML = '';
+                // Reset to login form view
+                showLoginForm();
+                alert('You have been logged out successfully!');
+            }
+        }
+
+        // Navigation
+        function showSection(sectionId, event) {
+            // Check if profile section is disabled
+            if (sectionId === 'profile' && !userRegistered) {
+                alert('Please complete your registration first to access your profile.');
+                return;
+            }
+
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Remove active class from nav items
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Add active class to clicked nav item
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
+            
+            // Load section-specific data
+            if (sectionId === 'registration') {
+                generateUniqueId();
+                console.log('📋 Registration section loaded, generated unique ID and date/time');
+            } else if (sectionId === 'profile') {
+                loadUserProfile();
+            }
+            
+            // Close sidebar on mobile
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('active');
+            }
+        }
+
+        // Mobile sidebar toggle
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
+        // Registration form handling
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('regEmail').value;
+            const registerBtn = document.getElementById('registerBtn');
+            const messageDiv = document.getElementById('registrationMessage');
+            
+            console.log('🔵 Registration form submitted for email:', email);
+            
+            // Check if user is already registered
+            const registrations = JSON.parse(localStorage.getItem('userRegistrations') || '[]');
+            const existingReg = registrations.find(r => r.email === email);
+            if (existingReg) {
+                messageDiv.innerHTML = '<div class="alert alert-error">❌ You have already completed your registration!</div>';
+                console.log('⚠️ User already registered:', email);
+                return;
+            }
+            
+            // Disable button and show loading
+            registerBtn.disabled = true;
+            registerBtn.innerHTML = '<div class="loading"></div>Processing Registration...';
+            
+            const fullName = document.getElementById('regFullName').value;
+            const age = document.getElementById('regAge').value;
+            const gender = document.getElementById('regGender').value;
+            const city = document.getElementById('regCity').value;
+            const contact = document.getElementById('regContact').value;
+            const emergencyContact = document.getElementById('regEmergencyContact').value || '';
+            const address = document.getElementById('regAddress').value || '';
+            
+            console.log('📋 Form data collected:', { fullName, email, age, gender, city, contact });
+            
+            // Validate required fields
+            if (!fullName || !email || !age || !gender || !city || !contact) {
+                messageDiv.innerHTML = '<div class="alert alert-error">❌ Please fill in all required fields!</div>';
+                registerBtn.disabled = false;
+                registerBtn.innerHTML = '📝 Complete Registration';
+                console.log('⚠️ Validation failed - missing required fields');
+                return;
+            }
+            
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                messageDiv.innerHTML = '<div class="alert alert-error">❌ Please enter a valid email address!</div>';
+                registerBtn.disabled = false;
+                registerBtn.innerHTML = '📝 Complete Registration';
+                console.log('⚠️ Validation failed - invalid email');
+                return;
+            }
+            
+            // Validate contact (10 digits)
+            if (!/^\d{10}$/.test(contact)) {
+                messageDiv.innerHTML = '<div class="alert alert-error">❌ Please enter a valid 10-digit contact number!</div>';
+                registerBtn.disabled = false;
+                registerBtn.innerHTML = '📝 Complete Registration';
+                console.log('⚠️ Validation failed - invalid contact');
+                return;
+            }
+            
+            const userPhotoFile = document.getElementById('regUserPhoto').files[0];
+            let photoData = null;
+            
+            // If photo is provided, process it
+            if (userPhotoFile) {
+                console.log('📷 Processing photo:', userPhotoFile.name, userPhotoFile.size, 'bytes');
+                
+                const userReader = new FileReader();
+                
+                userReader.onerror = function() {
+                    messageDiv.innerHTML = '<div class="alert alert-error">❌ Error reading photo file!</div>';
+                    registerBtn.disabled = false;
+                    registerBtn.innerHTML = '📝 Complete Registration';
+                    console.log('❌ FileReader error');
+                };
+                
+                userReader.onload = function(e) {
+                    photoData = e.target.result;
+                    console.log('✅ Photo converted to base64, size:', photoData.length, 'chars');
+                    processRegistration(photoData);
+                };
+                
+                userReader.readAsDataURL(userPhotoFile);
+                return;
+            } else {
+                console.log('ℹ️ No photo selected - using default avatar');
+                processRegistration(null);
+                return;
+            }
+            
+            function processRegistration(photoData) {
+                
+                const formData = {
+                    uniqueId: document.getElementById('regUniqueId').value,
+                    registrationDate: document.getElementById('regDate').value,
+                    registrationTime: document.getElementById('regTime').value,
+                    fullName: fullName,
+                    age: age,
+                    gender: gender,
+                    city: city,
+                    contact: contact,
+                    email: email,
+                    emergencyContact: emergencyContact,
+                    address: address,
+                    userPhoto: photoData || null,
+                    registrationTimestamp: new Date().toISOString()
+                };
+                
+                console.log('💾 Registration data prepared (photo:', photoData ? 'included' : 'not included', ')');
+                
+                // Simulate registration processing
+                setTimeout(() => {
+                    try {
+                        // Save registration data
+                        registrations.push(formData);
+                        localStorage.setItem('userRegistrations', JSON.stringify(registrations));
+                        console.log('✅ Registration saved to localStorage, total:', registrations.length);
+                        
+                        // Update account with full name if different
+                        const accounts = JSON.parse(localStorage.getItem('userAccounts') || '[]');
+                        const accountIndex = accounts.findIndex(a => a.email === email);
+                        if (accountIndex !== -1 && fullName !== accounts[accountIndex].fullName) {
+                            accounts[accountIndex].fullName = fullName;
+                            localStorage.setItem('userAccounts', JSON.stringify(accounts));
+                            console.log('✅ Account updated with full name');
+                            if (currentUserData) {
+                                currentUserData.fullName = fullName;
+                                currentUserName = fullName;
+                            }
+                        }
+                        
+                        // Enable profile section
+                        userRegistered = true;
+                        enableProfileSection();
+                        updateUserDisplay();
+                        
+                        // Show success message
+                        messageDiv.innerHTML = '<div class="alert alert-success">✅ Registration completed successfully! Welcome to the platform.</div>';
+                        console.log('🎉 Registration successful!');
+                        
+                        // Show registration results
+                        displayRegistrationResults(formData);
+                        
+                        // Update stats
+                        updateStats();
+                        
+                        // Hide registration form after successful registration
+                        setTimeout(() => {
+                            checkUserRegistration();
+                        }, 3000);
+                        
+                    } catch (err) {
+                        messageDiv.innerHTML = '<div class="alert alert-error">❌ Error saving registration: ' + err.message + '</div>';
+                        console.error('❌ Registration error:', err);
+                        registerBtn.disabled = false;
+                        registerBtn.innerHTML = '📝 Complete Registration';
+                    }
+                }, 1000);
+            }
+        });
+
+        // Profile management functions
+        function showEditProfile() {
+            document.getElementById('profileDisplay').style.display = 'none';
+            document.getElementById('profileEditForm').style.display = 'block';
+            
+            // Pre-fill edit form with registration data
+            const registrations = JSON.parse(localStorage.getItem('userRegistrations') || '[]');
+            const registration = registrations.find(r => r.email === currentUserData.email);
+            
+            if (registration) {
+                document.getElementById('editFullName').value = registration.fullName;
+                document.getElementById('editAge').value = registration.age;
+                document.getElementById('editGender').value = registration.gender;
+                document.getElementById('editCity').value = registration.city;
+                document.getElementById('editContact').value = registration.contact;
+                document.getElementById('editEmergencyContact').value = registration.emergencyContact || '';
+                document.getElementById('editAddress').value = registration.address || '';
+            }
+        }
+        
+        function cancelEditProfile() {
+            document.getElementById('profileEditForm').style.display = 'none';
+            document.getElementById('profileDisplay').style.display = 'block';
+        }
+        
+        // Profile update form handling
+        document.getElementById('profileUpdateForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const updatedData = {
+                ...currentUserData,
+                fullName: document.getElementById('editFullName').value,
+                age: document.getElementById('editAge').value,
+                gender: document.getElementById('editGender').value,
+                city: document.getElementById('editCity').value,
+                contact: document.getElementById('editContact').value,
+                emergencyContact: document.getElementById('editEmergencyContact').value,
+                address: document.getElementById('editAddress').value
+            };
+            
+            // Handle photo update if provided
+            const photoFile = document.getElementById('editProfilePhoto').files[0];
+            if (photoFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    updatedData.userPhoto = e.target.result;
+                    saveUpdatedProfile(updatedData);
+                };
+                reader.readAsDataURL(photoFile);
+            } else {
+                saveUpdatedProfile(updatedData);
+            }
+        });
+        
+        function saveUpdatedProfile(updatedData) {
+            // Update registration data
+            let registrations = JSON.parse(localStorage.getItem('userRegistrations') || '[]');
+            const regIndex = registrations.findIndex(r => r.email === currentUserData.email);
+            if (regIndex !== -1) {
+                registrations[regIndex] = { ...registrations[regIndex], ...updatedData };
+                localStorage.setItem('userRegistrations', JSON.stringify(registrations));
+            }
+            
+            // Update account data if name changed
+            if (updatedData.fullName !== currentUserData.fullName) {
+                let accounts = JSON.parse(localStorage.getItem('userAccounts') || '[]');
+                const accountIndex = accounts.findIndex(a => a.email === currentUserData.email);
+                if (accountIndex !== -1) {
+                    accounts[accountIndex].fullName = updatedData.fullName;
+                    localStorage.setItem('userAccounts', JSON.stringify(accounts));
+                }
+                currentUserData.fullName = updatedData.fullName;
+                currentUserName = updatedData.fullName;
+            }
+            
+            // Update UI
+            updateUserDisplay();
+            loadUserProfile();
+            cancelEditProfile();
+            
+            alert('✅ Profile updated successfully!');
+        }
+
+        // Display registration results
+        function displayRegistrationResults(data) {
+            const resultsDiv = document.getElementById('registrationResults');
+            
+            // Generate photo HTML - show uploaded photo or default avatar
+            let photoHTML = '';
+            if (data.userPhoto) {
+                photoHTML = `
+                    <div class="patient-images">
+                        <div style="text-align: center;">
+                            <img src="${data.userPhoto}" alt="Profile Photo" style="max-width: 120px; max-height: 120px; border-radius: 50%;">
+                            <p style="margin-top: 5px; font-size: 0.9rem; color: #6c757d;">Profile Photo</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                photoHTML = `
+                    <div style="text-align: center; margin: 20px 0;">
+                        <div style="width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, #3498db, #2980b9); display: flex; align-items: center; justify-content: center; margin: 0 auto; color: white; font-weight: bold; font-size: 3rem;">
+                            ${data.fullName.charAt(0).toUpperCase()}
+                        </div>
+                        <p style="margin-top: 5px; font-size: 0.9rem; color: #6c757d;">Default Avatar (No photo uploaded)</p>
+                    </div>
+                `;
+            }
+            
+            resultsDiv.innerHTML = `
+                <div class="analysis-result">
+                    <h4>✅ Registration Successful</h4>
+                    
+                    ${photoHTML}
+                    
+                    <div style="background: white; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                        <h5 style="color: #2c3e50; margin-bottom: 15px;">Registration Details</h5>
+                        <p><strong>Name:</strong> ${data.fullName}</p>
+                        <p><strong>Age:</strong> ${data.age} years</p>
+                        <p><strong>Gender:</strong> ${data.gender}</p>
+                        <p><strong>City:</strong> ${data.city}</p>
+                        <p><strong>Contact:</strong> ${data.contact}</p>
+                        <p><strong>Email:</strong> ${data.email}</p>
+                        <p><strong>User ID:</strong> ${data.uniqueId}</p>
+                        <p><strong>Registration:</strong> ${formatRegistrationDateTime(data.registrationDate || data.registrationTimestamp, data.registrationTime)}</p>
+                        ${data.address ? `<p><strong>Address:</strong> ${data.address}</p>` : ''}
+                        ${data.emergencyContact ? `<p><strong>Emergency Contact:</strong> ${data.emergencyContact}</p>` : ''}
+                    </div>
+                    
+                    <div style="background: #e8f5e8; padding: 15px; border-radius: 10px; margin: 20px 0;">
+                        <p style="color: #155724; margin: 0; text-align: center;">
+                            <strong>Welcome to the platform!</strong> Your profile has been created successfully. 
+                            You can now access all platform features and manage your profile.
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Save user data
+        function saveUserData(data) {
+            let registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+            registeredUsers.push(data);
+            localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+        }
+
+        // Update user registration
+        function updateUserRegistration(data) {
+            let registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+            const userIndex = registeredUsers.findIndex(u => u.email === data.email);
+            
+            if (userIndex !== -1) {
+                // Update existing user
+                registeredUsers[userIndex] = { ...registeredUsers[userIndex], ...data };
+            } else {
+                // Add new user
+                registeredUsers.push(data);
+            }
+            
+            localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+        }
+
+        // Load user profile
+        function loadUserProfile() {
+            if (userRegistered && currentUserData) {
+                // Get registration data
+                const registrations = JSON.parse(localStorage.getItem('userRegistrations') || '[]');
+                const registration = registrations.find(r => r.email === currentUserData.email);
+                
+                if (registration) {
+                    // Show profile display
+                    document.getElementById('profileDisplay').style.display = 'block';
+                    document.getElementById('profileEditForm').style.display = 'none';
+                    document.getElementById('profileNotRegistered').style.display = 'none';
+                    
+                    // Update profile display with registration data
+                    document.getElementById('profileDisplayName').textContent = registration.fullName;
+                    document.getElementById('profileDisplayId').textContent = registration.uniqueId;
+                    document.getElementById('profileDisplayAge').textContent = `${registration.age} years`;
+                    document.getElementById('profileDisplayGender').textContent = registration.gender;
+                    document.getElementById('profileDisplayCity').textContent = registration.city;
+                    document.getElementById('profileDisplayEmail').textContent = registration.email;
+                    document.getElementById('profileDisplayPhone').textContent = registration.contact;
+                    document.getElementById('profileDisplayEmergency').textContent = registration.emergencyContact || 'Not provided';
+                    document.getElementById('profileDisplayAddress').textContent = registration.address || 'Address not provided';
+                    // Use formatted registration date/time for profile display (fallback to timestamp if needed)
+                    document.getElementById('profileDisplayDate').textContent = formatRegistrationDateTime(registration.registrationDate || registration.registrationTimestamp, registration.registrationTime);
+                    
+                    // Update profile photo
+                    const photoDisplay = document.getElementById('profilePhotoDisplay');
+                    if (registration.userPhoto) {
+                        photoDisplay.innerHTML = `<img src="${registration.userPhoto}" style="width: 100%; height: 100%; object-fit: cover;" alt="Profile Photo">`;
+                    } else {
+                        photoDisplay.innerHTML = '<div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 3rem;">👤</div>';
+                    }
+                } else {
+                    // Show not registered message
+                    document.getElementById('profileDisplay').style.display = 'none';
+                    document.getElementById('profileEditForm').style.display = 'none';
+                    document.getElementById('profileNotRegistered').style.display = 'block';
+                }
+            } else {
+                // Show not registered message
+                document.getElementById('profileDisplay').style.display = 'none';
+                document.getElementById('profileEditForm').style.display = 'none';
+                document.getElementById('profileNotRegistered').style.display = 'block';
+            }
+        }
+
+        // Small number animation helper (non-blocking)
+        function animateCount(id, target, duration = 700) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const start = parseInt(String(el.textContent).replace(/[^0-9]/g, '')) || 0;
+            const startTime = performance.now();
+
+            function step(now) {
+                const progress = Math.min((now - startTime) / duration, 1);
+                const value = Math.floor(start + (target - start) * progress);
+                el.textContent = value;
+                if (progress < 1) requestAnimationFrame(step);
+                else el.textContent = target;
+            }
+
+            requestAnimationFrame(step);
+        }
+
+        // Update statistics (uses animateCount for subtle interactivity)
+        function updateStats() {
+            const accounts = JSON.parse(localStorage.getItem('userAccounts') || '[]');
+            const registrations = JSON.parse(localStorage.getItem('userRegistrations') || '[]');
+
+            animateCount('totalUsers', accounts.length);
+            animateCount('activeUsers', registrations.length);
+            animateCount('pendingUsers', Math.max(0, accounts.length - registrations.length));
+
+            // 'newUsers' metric removed — no longer tracked on home dashboard
+        }
+
+
+
+        // Initialize system when page loads
+        document.addEventListener('DOMContentLoaded', initializeSystem);
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                document.getElementById('sidebar').classList.remove('active');
+            }
+        });
+
+        // Expose setUserName function globally for login page
+        window.setUserName = setUserName;
+    </script>
+</body>
+</html>
