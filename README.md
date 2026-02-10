@@ -163,22 +163,6 @@ Lung-Cancer-Detection-Using-CT-ImageProcessing---MachineLearning/
        alt="CT Scan illustration" 
        width="800"
        style="border-radius:10px;">
-<img src="Dashboards/P2-111.jpg" 
-       alt="CT Scan illustration" 
-       width="800"
-       style="border-radius:10px;">
-<img src="Dashboards/P2-112.jpg" 
-       alt="CT Scan illustration" 
-       width="800"
-       style="border-radius:10px;">
-<img src="Dashboards/P2-113.jpg" 
-       alt="CT Scan illustration" 
-       width="800"
-       style="border-radius:10px;">
-<img src="Dashboards/P2-114.jpg" 
-       alt="CT Scan illustration" 
-       width="800"
-       style="border-radius:10px;">
 </p>
 
 ---
@@ -203,20 +187,7 @@ Lung-Cancer-Detection-Using-CT-ImageProcessing---MachineLearning/
        style="border-radius:10px;">
 </p>
 
----
-
 ### 🔍 Choose CT Scan Model
-
-<p align="center">
-  <img src="Dashboards/P2-112.jpg" 
-       alt="CT Scan illustration" 
-       width="800"
-       style="border-radius:10px;">
-</p>
-
----
-
-### 🧠 Prediction Results
 
 <p align="center">
   <img src="Dashboards/P2-113.jpg" 
@@ -225,7 +196,14 @@ Lung-Cancer-Detection-Using-CT-ImageProcessing---MachineLearning/
        style="border-radius:10px;">
 </p>
 
----
+### 🧠 Prediction Results
+
+<p align="center">
+  <img src="Dashboards/P2-114.jpg" 
+       alt="CT Scan illustration" 
+       width="800"
+       style="border-radius:10px;">
+</p>
 
 ## 📌 How It Works (High-Level)
 
@@ -326,6 +304,7 @@ Frontend Developer | Python Programmer | Data Analyst
 ---
 
 ⭐ If you find this project meaningful, giving it a **star ⭐** encourages more quality work!
+
 
 
 
