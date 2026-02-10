@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="Dashboards/CT-Lung-Cancer-Photo.jpg" 
+  <img src="Dashboards/P2-101.jpg" 
        alt="CT Scan illustration" 
        width="800"
        style="border-radius:10px;">
-  <img src="Dashboards/P2-101.jpg" 
+   <img src="Dashboards/CT-Lung-Cancer-Photo.jpg" 
        alt="CT Scan illustration" 
        width="800"
        style="border-radius:10px;">
@@ -165,8 +165,6 @@ Lung-Cancer-Detection-Using-CT-ImageProcessing---MachineLearning/
        style="border-radius:10px;">
 </p>
 
----
-
 ### 🫁 Select Patient
 
 <p align="center">
@@ -175,8 +173,6 @@ Lung-Cancer-Detection-Using-CT-ImageProcessing---MachineLearning/
        width="800"
        style="border-radius:10px;">
 </p>
-
----
 
 ### 🔍 Upload CT Scan
 
@@ -304,6 +300,7 @@ Frontend Developer | Python Programmer | Data Analyst
 ---
 
 ⭐ If you find this project meaningful, giving it a **star ⭐** encourages more quality work!
+
 
 
 
