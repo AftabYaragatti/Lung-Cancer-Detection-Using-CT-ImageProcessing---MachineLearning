@@ -116,7 +116,7 @@ Lung-Cancer-Detection-Using-CT-ImageProcessing---MachineLearning/
 ├── README.md
 └── .gitignore
 
-```text
+```
 
 ---
 
@@ -327,5 +327,6 @@ Frontend Developer | Python Programmer | Data Analyst
 ---
 
 ⭐ If you find this project meaningful, giving it a **star ⭐** encourages more quality work!
+
 
 
