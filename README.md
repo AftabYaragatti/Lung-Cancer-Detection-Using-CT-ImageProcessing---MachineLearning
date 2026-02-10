@@ -209,8 +209,6 @@ Lung-Cancer-Detection-Using-CT-ImageProcessing---MachineLearning/
 - Apply noise reduction & segmentation  
 - Extract features for classification
 
-Image preprocessing enhances **relevant anatomical features** for better ML analysis. :contentReference[oaicite:2]{index=2}
-
 ---
 
 ### 2. **Machine Learning Classification**
@@ -300,9 +298,3 @@ Frontend Developer | Python Programmer | Data Analyst
 ---
 
 ⭐ If you find this project meaningful, giving it a **star ⭐** encourages more quality work!
-
-
-
-
-
-
