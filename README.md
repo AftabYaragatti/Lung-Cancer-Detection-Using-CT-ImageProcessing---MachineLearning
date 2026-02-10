@@ -203,6 +203,12 @@ Lung-Cancer-Detection-Using-CT-ImageProcessing---MachineLearning/
 
 ## 📌 How It Works (High-Level)
 
+<p align="center">
+  <a href="Lung_cancer_Detection_Demo_Video.mp4">
+    <img src="project/Output/P2-101.jpg" width="800" style="border-radius:10px;">
+  </a>
+</p>
+
 ### 1. **Image Preprocessing**
 - Resize CT images  
 - Convert to grayscale  
@@ -298,3 +304,4 @@ Frontend Developer | Python Programmer | Data Analyst
 ---
 
 ⭐ If you find this project meaningful, giving it a **star ⭐** encourages more quality work!
+
