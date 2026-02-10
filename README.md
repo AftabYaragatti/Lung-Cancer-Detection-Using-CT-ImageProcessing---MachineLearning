@@ -143,7 +143,6 @@ Lung-Cancer-Detection-Using-CT-ImageProcessing---MachineLearning/
        alt="CT Scan illustration" 
        width="800"
        style="border-radius:10px;">
-</p>
 <img src="Dashboards/P2-106.jpg" 
        alt="CT Scan illustration" 
        width="800"
@@ -327,6 +326,7 @@ Frontend Developer | Python Programmer | Data Analyst
 ---
 
 ⭐ If you find this project meaningful, giving it a **star ⭐** encourages more quality work!
+
 
 
 
