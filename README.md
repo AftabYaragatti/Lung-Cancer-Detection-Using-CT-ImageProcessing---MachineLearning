@@ -1,5 +1,8 @@
 <p align="center">
-  <img src="screenshots/dashboard-preview.png" width="900" alt="Lung Cancer Detection Dashboard">
+  <img src="Dashboards/CT-Lung-Cancer-Photo.jpg" 
+       alt="CT Scan illustration" 
+       width="800"
+       style="border-radius:10px;">
 </p>
 
 # 🫁 Lung Cancer Detection Using CT Image Processing & Machine Learning
@@ -74,44 +77,39 @@ This project uses **three different models** to compare performance:
 ```text
 Lung-Cancer-Detection-Using-CT-ImageProcessing---MachineLearning/
 │
+├── Dashboards/
+│   ├── Admin_Dashboard.html
+│   ├── Model_Dashboard.html
+│   ├── User_Dashboard.html
+│   ├── CT-Lung-Cancer-Photo.jpg
+│   ├── CT-Scan-Image.jpg
+│   ├── CT-Scan-Image2.jpg
+│   └── Cancer1.jpg
+│
 ├── lung-backend/
 │   ├── app.py
-│   ├── cnn_model.py
-│   ├── resnet_model.py
-│   ├── nb_model.py
-│   ├── preprocessing.py
-│   ├── predict.py
-│   └── requirements.txt
+│   ├── model_cnn.py
+│   ├── model_resnet.py
+│   ├── model_naive_bayes.py
+│   ├── requirements.txt
+│   └── utils/
 │
 ├── lung-frontend/
 │   ├── index.html
 │   ├── style.css
-│   └── script.js
-│
-├── dashboard/
-│   ├── dashboard.py
-│   ├── charts.py
-│   ├── metrics.py
-│   ├── style.css
+│   ├── script.js
 │   └── assets/
 │
 ├── dataset/
-│   ├── train/
-│   ├── test/
-│   └── validation/
+│   ├── Normal/
+│   └── Cancer/
 │
-├── screenshots/
-│   ├── dashboard-preview.png
-│   ├── input-ct-images.png
-│   ├── processed-images.png
-│   ├── cnn-results.png
-│   ├── resnet-results.png
-│   └── nb-results.png
+├── notebooks/
+│   ├── CNN_Model.ipynb
+│   ├── ResNet_Model.ipynb
+│   └── NaiveBayes_Model.ipynb
 │
-├── IEEE-Paper-Lung_Cancer_Detection_Using_CT_Scan_Image.pdf
-├── Lung_Cancer_Detection_Report.docx
-├── Lung_Cancer_Detection_PPT.pptx
-├── Lung_Cancer_Detection_Source_Code.pdf
-├── Lung_Cancer_Detection_Output_Screenshots.pdf
-│
-└── README.md
+├── README.md
+└── .gitignore
+
+
