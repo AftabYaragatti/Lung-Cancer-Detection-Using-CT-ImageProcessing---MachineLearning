@@ -207,8 +207,8 @@ Lung-Cancer-Detection-Using-CT-ImageProcessing---MachineLearning/
   <a href="Lung_cancer_Detection_Demo_Video.mp4">
     <img src="Dashboards/CT-Lung-Cancer-Photo.jpg" width="400"  alt='View Demo Video of Project' style="border-radius:10px;">
   </a>
-  Click on Above Links to View the Demo of Project
 </p>
+Click on Above Links to View the Demo of Project
 
 ### 1. **Image Preprocessing**
 - Resize CT images  
@@ -305,6 +305,7 @@ Frontend Developer | Python Programmer | Data Analyst
 ---
 
 ⭐ If you find this project meaningful, giving it a **star ⭐** encourages more quality work!
+
 
 
 
