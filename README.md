@@ -3,6 +3,10 @@
        alt="CT Scan illustration" 
        width="800"
        style="border-radius:10px;">
+  <img src="Dashboards/P2-101.jpg" 
+       alt="CT Scan illustration" 
+       width="800"
+       style="border-radius:10px;">
 </p>
 
 # 🫁 Lung Cancer Detection Using CT Image Processing & Machine Learning
@@ -112,4 +116,211 @@ Lung-Cancer-Detection-Using-CT-ImageProcessing---MachineLearning/
 ├── README.md
 └── .gitignore
 
+---
+
+## 📸 Project Outputs
+
+<p align="center">
+  <img src="Dashboards/P2-101.jpg" 
+       alt="CT Scan illustration" 
+       width="800"
+       style="border-radius:10px;">
+<img src="Dashboards/P2-102.jpg" 
+       alt="CT Scan illustration" 
+       width="800"
+       style="border-radius:10px;">
+<img src="Dashboards/P2-103.jpg" 
+       alt="CT Scan illustration" 
+       width="800"
+       style="border-radius:10px;">
+<img src="Dashboards/P2-104.jpg" 
+       alt="CT Scan illustration" 
+       width="800"
+       style="border-radius:10px;">
+<img src="Dashboards/P2-105.jpg" 
+       alt="CT Scan illustration" 
+       width="800"
+       style="border-radius:10px;">
+</p>
+<img src="Dashboards/P2-106.jpg" 
+       alt="CT Scan illustration" 
+       width="800"
+       style="border-radius:10px;">
+<img src="Dashboards/P2-107.jpg" 
+       alt="CT Scan illustration" 
+       width="800"
+       style="border-radius:10px;">
+<img src="Dashboards/P2-108.jpg" 
+       alt="CT Scan illustration" 
+       width="800"
+       style="border-radius:10px;">
+<img src="Dashboards/P2-109.jpg" 
+       alt="CT Scan illustration" 
+       width="800"
+       style="border-radius:10px;">
+<img src="Dashboards/P2-110.jpg" 
+       alt="CT Scan illustration" 
+       width="800"
+       style="border-radius:10px;">
+<img src="Dashboards/P2-111.jpg" 
+       alt="CT Scan illustration" 
+       width="800"
+       style="border-radius:10px;">
+<img src="Dashboards/P2-112.jpg" 
+       alt="CT Scan illustration" 
+       width="800"
+       style="border-radius:10px;">
+<img src="Dashboards/P2-113.jpg" 
+       alt="CT Scan illustration" 
+       width="800"
+       style="border-radius:10px;">
+<img src="Dashboards/P2-114.jpg" 
+       alt="CT Scan illustration" 
+       width="800"
+       style="border-radius:10px;">
+</p>
+
+### 🫁 Select Patient
+
+<p align="center">
+  <img src="Dashboards/P2-111.jpg" 
+       alt="CT Scan illustration" 
+       width="800"
+       style="border-radius:10px;">
+</p>
+
+---
+
+### 🔍 Upload CT Scan
+
+<p align="center">
+  <img src="Dashboards/P2-112.jpg" 
+       alt="CT Scan illustration" 
+       width="800"
+       style="border-radius:10px;">
+</p>
+
+---
+
+### 🔍 Choose CT Scan Model
+
+<p align="center">
+  <img src="Dashboards/P2-112.jpg" 
+       alt="CT Scan illustration" 
+       width="800"
+       style="border-radius:10px;">
+</p>
+
+---
+
+### 🧠 Prediction Results
+
+<p align="center">
+  <img src="Dashboards/P2-113.jpg" 
+       alt="CT Scan illustration" 
+       width="800"
+       style="border-radius:10px;">
+</p>
+
+---
+
+## 📌 How It Works (High-Level)
+
+### 1. **Image Preprocessing**
+- Resize CT images  
+- Convert to grayscale  
+- Apply noise reduction & segmentation  
+- Extract features for classification
+
+Image preprocessing enhances **relevant anatomical features** for better ML analysis. :contentReference[oaicite:2]{index=2}
+
+---
+
+### 2. **Machine Learning Classification**
+- Split dataset into train/test sets  
+- Train model using ML / deep learning frameworks  
+- Evaluate performance (accuracy, confusion matrix, etc.)
+
+Typical classification models include:
+- Support Vector Machine (SVM)
+- Random Forest
+- Convolutional Neural Network (CNN) models (if deep learning used)
+
+---
+
+### 3. **Frontend + Backend Integration**
+- User uploads CT image via frontend
+- Backend receives and preprocesses
+- Model predicts category: **normal or cancerous**
+- Result shown instantly on UI
+
+---
+
+## 📜 Deliverables Included
+
+| Artifact | Description |
+|----------|-------------|
+| 📄 IEEE-Paper | Published paper on the approach |
+| 📘 Project Report | Detailed documentation |
+| 📊 Output Screenshots | Screenshot bundle of outputs |
+| 📽️ PPT | Presentation slides |
+| 📜 Source Code PDF | All code documented |
+
+---
+
+## 🧪 How to Use Locally
+
+1. **Clone the repository**
+
+```bash
+git clone https://github.com/AftabYaragatti/Lung-Cancer-Detection-Using-CT-ImageProcessing---MachineLearning.git
+```
+
+2. **Install dependencies**
+
+```bash
+cd lung-backend
+pip install -r requirements.txt
+```
+
+3. **Run backend API**
+
+```bash
+python app.py
+```
+
+4. **Open frontend UI**
+
+Open `lung-frontend/index.html` in your browser
+
+---
+
+## 📈 Who This Project Is For
+
+- 🧑‍🎓 Final year students
+- 🤖 ML & AI enthusiasts
+- 🩺 Healthcare tech researchers
+- 💼 Recruiters reviewing data science portfolios
+
+---
+
+## ⚠️ Disclaimer
+
+This project is **for educational and research purposes only**.  
+It is *not a medical diagnosis system* and should not be used for clinical decisions.
+
+---
+
+## 👨‍💻 About Me
+
+**Aftab Yaragatti**  
+Frontend Developer | Python Programmer | Data Analyst  
+
+🔗 GitHub: https://github.com/AftabYaragatti  
+🔗 Portfolio: https://aftabyaragatti.github.io/Portfolio/  
+🔗 LinkedIn: https://www.linkedin.com/in/aftab-yaragatti  
+
+---
+
+⭐ If you find this project meaningful, giving it a **star ⭐** encourages more quality work!
 
