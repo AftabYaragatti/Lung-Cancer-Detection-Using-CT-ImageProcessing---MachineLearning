@@ -203,7 +203,7 @@ Lung-Cancer-Detection-Using-CT-ImageProcessing---MachineLearning/
 
 ## 📌 How It Works (High-Level)
 
-<p align="center">
+<p align="left">
   <a href="Lung_cancer_Detection_Demo_Video.mp4">
     <img src="Dashboards/CT-Lung-Cancer-Photo.jpg" width="500"  alt='View Demo Video of Project' style="border-radius:10px;">
   </a>
@@ -305,6 +305,7 @@ Frontend Developer | Python Programmer | Data Analyst
 ---
 
 ⭐ If you find this project meaningful, giving it a **star ⭐** encourages more quality work!
+
 
 
 
