@@ -1,62 +1,84 @@
 <p align="center">
-  <img src="screenshots/lung-cancer-overview.png" width="900" alt="Lung Cancer Detection Overview">
+  <img src="screenshots/dashboard-preview.png" width="900" alt="Lung Cancer Detection Dashboard">
 </p>
 
 # 🫁 Lung Cancer Detection Using CT Image Processing & Machine Learning
 
-Welcome 👋  
-This repository contains a **Lung Cancer Detection system** developed using **CT scan image processing** and **machine learning techniques** to support classification of lung CT images into normal and cancerous categories.
+Welcome to my **Lung Cancer Detection System** 🚑  
+This project uses **CT scan image processing** combined with **Machine Learning & Deep Learning models** to detect lung cancer at an early stage.
 
-The project includes:
-- Backend logic for ML model inference  
-- Frontend UI for interactive image upload  
-- Research report & IEEE paper  
-- Output screenshots and demo results
+The system is built with:
+- 🧠 **3 ML/DL Models**: CNN, ResNet, Naive Bayes  
+- 📊 **Interactive Dashboard** for visualization  
+- 🖼️ Advanced CT image preprocessing  
+- 🌐 Frontend + Backend integration  
 
-This is designed as a **final-year/major project** with real medical image processing steps and ML model training workflows.
+This is a **major/final-year project**, designed with real-world medical AI workflow in mind.
 
 ---
 
 ## 🎯 Project Objective
 
-The goal of this project is to assist in **early detection of lung cancer** using automated analysis of CT scan images with a combination of image preprocessing and machine learning algorithms.
+The primary objective of this project is to:
+- Automatically analyze lung CT scan images  
+- Classify them as **Normal / Cancerous**  
+- Compare multiple ML & DL models for accuracy  
+- Provide results through an **interactive dashboard**
 
-📌 Early detection is critical in improving lung cancer survival outcomes. This system demonstrates how image processing and AI can help identify patterns that might be overlooked or require expert review. :contentReference[oaicite:1]{index=1}
-
----
-
-## 🛠️ Technologies & Tools Used
-
-| Technology | Purpose |
-|------------|---------|
-| 🐍 Python | Core development |
-| 🖼️ OpenCV | Image preprocessing |
-| 📊 NumPy & Pandas | Data handling |
-| 🤖 Scikit-learn / TensorFlow | ML model training |
-| 💾 Dataset | Lung CT images (normal vs abnormal) |
-| 🔥 HTML/CSS/JS | Frontend for image upload |
-| 📂 Backend | API / processing logic |
+🩺 Early lung cancer detection can significantly improve survival rates, and this project demonstrates how **AI + image processing** can support medical diagnosis.
 
 ---
 
-## 💡 Key Features
+## 🧠 Models Used (Very Important ⭐)
 
-✔ Automated image preprocessing  
-✔ Machine learning classification (normal vs cancerous)  
-✔ Visual output (processed images, prediction results)  
-✔ Interactive frontend + backend integration  
-✔ Project deliverables like IEEE paper, report & screenshots  
+This project uses **three different models** to compare performance:
+
+| Model | Type | Purpose |
+|-----|------|--------|
+| 🧠 CNN | Deep Learning | Feature extraction directly from CT images |
+| 🔥 ResNet | Deep Learning | High-accuracy deep residual learning |
+| 📊 Naive Bayes (NB) | Machine Learning | Statistical baseline model |
+
+➡️ Final predictions are analyzed and compared using accuracy, loss, and output confidence.
 
 ---
 
-## 📁 Project Structure
+## 🛠️ Technologies & Tools
+
+| Technology | Usage |
+|-----------|------|
+| 🐍 Python | Core programming |
+| 🖼️ OpenCV | CT image preprocessing |
+| 🤖 TensorFlow / Keras | CNN & ResNet models |
+| 📊 Scikit-learn | Naive Bayes model |
+| 🔢 NumPy & Pandas | Data handling |
+| 🌐 HTML, CSS, JS | Frontend UI |
+| 📊 Dashboard | Visualization & results |
+| 📁 Dataset | Lung CT scan images |
+
+---
+
+## ⭐ Key Features
+
+✔ CT image preprocessing (noise removal, resizing, normalization)  
+✔ Multi-model comparison (CNN vs ResNet vs NB)  
+✔ Accuracy & prediction visualization  
+✔ Interactive dashboard  
+✔ Frontend image upload support  
+✔ Research-grade documentation & reports  
+
+---
+
+## 📁 Complete Project Structure
 
 ```text
 Lung-Cancer-Detection-Using-CT-ImageProcessing---MachineLearning/
 │
 ├── lung-backend/
 │   ├── app.py
-│   ├── model.py
+│   ├── cnn_model.py
+│   ├── resnet_model.py
+│   ├── nb_model.py
 │   ├── preprocessing.py
 │   ├── predict.py
 │   └── requirements.txt
@@ -66,145 +88,30 @@ Lung-Cancer-Detection-Using-CT-ImageProcessing---MachineLearning/
 │   ├── style.css
 │   └── script.js
 │
-├── IEEE-Paper-Lung_Cancer_Detection_Using_CT_Scan_Image.pdf
-├── Lung_Cancer_Detection_Manual.pdf
-├── Lung_Cancer_Detection_Output_Screenshots.pdf
-├── Lung_Cancer_Detection_PPT.pptx
-├── Lung_Cancer_Detection_Report.docx
-├── Lung_Cancer_Detection_Source_Code.pdf
+├── dashboard/
+│   ├── dashboard.py
+│   ├── charts.py
+│   ├── metrics.py
+│   ├── style.css
+│   └── assets/
+│
+├── dataset/
+│   ├── train/
+│   ├── test/
+│   └── validation/
+│
 ├── screenshots/
-│   ├── lung-cancer-overview.png
-│   ├── input-samples.png
-│   ├── processed-samples.png
-│   └── prediction-results.png
+│   ├── dashboard-preview.png
+│   ├── input-ct-images.png
+│   ├── processed-images.png
+│   ├── cnn-results.png
+│   ├── resnet-results.png
+│   └── nb-results.png
+│
+├── IEEE-Paper-Lung_Cancer_Detection_Using_CT_Scan_Image.pdf
+├── Lung_Cancer_Detection_Report.docx
+├── Lung_Cancer_Detection_PPT.pptx
+├── Lung_Cancer_Detection_Source_Code.pdf
+├── Lung_Cancer_Detection_Output_Screenshots.pdf
 │
 └── README.md
-```
-
----
-
-## 📸 Sample Project Outputs
-
-### 🫁 Input CT Scan Images
-
-<p align="center">
-  <img src="screenshots/input-samples.png" width="700" alt="Input CT Scan Samples">
-</p>
-
----
-
-### 🔍 Processed Image Preview
-
-<p align="center">
-  <img src="screenshots/processed-samples.png" width="700" alt="Processed CT Scan Samples">
-</p>
-
----
-
-### 🧠 Prediction Results
-
-<p align="center">
-  <img src="screenshots/prediction-results.png" width="700" alt="Prediction Results">
-</p>
-
----
-
-## 📌 How It Works (High-Level)
-
-### 1. **Image Preprocessing**
-- Resize CT images  
-- Convert to grayscale  
-- Apply noise reduction & segmentation  
-- Extract features for classification
-
-Image preprocessing enhances **relevant anatomical features** for better ML analysis. :contentReference[oaicite:2]{index=2}
-
----
-
-### 2. **Machine Learning Classification**
-- Split dataset into train/test sets  
-- Train model using ML / deep learning frameworks  
-- Evaluate performance (accuracy, confusion matrix, etc.)
-
-Typical classification models include:
-- Support Vector Machine (SVM)
-- Random Forest
-- Convolutional Neural Network (CNN) models (if deep learning used)
-
----
-
-### 3. **Frontend + Backend Integration**
-- User uploads CT image via frontend
-- Backend receives and preprocesses
-- Model predicts category: **normal or cancerous**
-- Result shown instantly on UI
-
----
-
-## 📜 Deliverables Included
-
-| Artifact | Description |
-|----------|-------------|
-| 📄 IEEE-Paper | Published paper on the approach |
-| 📘 Project Report | Detailed documentation |
-| 📊 Output Screenshots | Screenshot bundle of outputs |
-| 📽️ PPT | Presentation slides |
-| 📜 Source Code PDF | All code documented |
-
----
-
-## 🧪 How to Use Locally
-
-1. **Clone the repository**
-
-```bash
-git clone https://github.com/AftabYaragatti/Lung-Cancer-Detection-Using-CT-ImageProcessing---MachineLearning.git
-```
-
-2. **Install dependencies**
-
-```bash
-cd lung-backend
-pip install -r requirements.txt
-```
-
-3. **Run backend API**
-
-```bash
-python app.py
-```
-
-4. **Open frontend UI**
-
-Open `lung-frontend/index.html` in your browser
-
----
-
-## 📈 Who This Project Is For
-
-- 🧑‍🎓 Final year students
-- 🤖 ML & AI enthusiasts
-- 🩺 Healthcare tech researchers
-- 💼 Recruiters reviewing data science portfolios
-
----
-
-## ⚠️ Disclaimer
-
-This project is **for educational and research purposes only**.  
-It is *not a medical diagnosis system* and should not be used for clinical decisions.
-
----
-
-## 👨‍💻 About Me
-
-**Aftab Yaragatti**  
-Frontend Developer | Python Programmer | Data Scientist  
-
-🔗 GitHub: https://github.com/AftabYaragatti  
-🔗 Portfolio: https://aftabyaragatti.github.io/Portfolio/  
-🔗 LinkedIn: https://www.linkedin.com/in/aftab-yaragatti  
-
----
-
-⭐ If you find this project meaningful, giving it a **star ⭐** encourages more quality work!
